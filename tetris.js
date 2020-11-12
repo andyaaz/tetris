@@ -26,16 +26,53 @@ function drawMatrix(matrix, offset) {
   });
 }
 
+function playerMove(offset) {
+  player.pos.x += offset * sideLength;
+  // if (collide(arena, player)) {
+  //   player.pos.x -= offset;
+  // }
+}
+
+function playerDrop() {
+  player.pos.y += sideLength;
+  // if (collide(arena, player)) {
+  //   player.pos.y--;
+  //   merge(arena, player);
+  //   playerReset();
+  //   arenaSweep();
+  //   updateScore();
+  // }
+  // dropCounter = 0;
+}
+
+function keyPressed() {
+  if (keyCode === LEFT_ARROW) {
+    playerMove(-1);
+  } else if (keyCode === RIGHT_ARROW) {
+    playerMove(1);
+  } else if (keyCode === DOWN_ARROW) {
+    playerDrop();
+  }
+}
+
+function keyTyped() {
+  if (key === "q") {
+    console.log("rotate anti clockwise");
+  } else if (key === "w") {
+    console.log("rotate clockwise");
+  }
+}
+
 function setup() {
-  createCanvas(400, 600);
+  createCanvas(400, 400);
 }
 
 function draw() {
   background(0);
-  dropTimer += deltaTime;
-  if (dropTimer > dropInterval) {
-    player.pos.y += sideLength;
-    dropTimer = 0;
-  }
+  // dropTimer += deltaTime;
+  // if (dropTimer > dropInterval) {
+  //   player.pos.y += sideLength;
+  //   dropTimer = 0;
+  // }
   drawMatrix(matrix, player.pos);
 }
