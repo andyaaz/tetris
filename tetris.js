@@ -11,6 +11,20 @@ let dropTimer = 0;
 let player = { pos: { x: 0, y: 0 }, matrix };
 const arena = createMatrix(20, 20);
 
+function playerReset() {
+  const pieces = "TJLOSZI";
+  player.matrix = createPiece(
+    pieces[Math.floor(pieces.length * Math.random())]
+  );
+  player.pos.y = 0;
+  player.pos.x = 0;
+  // if (collide(arena, player)) {
+  //   arena.forEach(row => row.fill(0));
+  //   player.score = 0;
+  //   updateScore();
+  // }
+}
+
 function createPiece(type) {
   if (type === "I") {
     return [
@@ -118,7 +132,7 @@ function playerDrop() {
   if (collide(arena, player)) {
     player.pos.y -= sideLength;
     merge(arena, player);
-    // playerReset();
+    playerReset();
     // arenaSweep();
     // updateScore();
   }
