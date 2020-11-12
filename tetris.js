@@ -1,15 +1,23 @@
-const matrix = [
-  [0, 0, 0],
-  [1, 1, 1],
-  [0, 1, 0],
-];
 const sideLength = 20;
 // one second
 const dropInterval = 1000;
-
 let dropTimer = 0;
-let player = { pos: { x: 0, y: 0 }, matrix };
-const arena = createMatrix(20, 20);
+let canvasWidth = 200;
+let canvasHeight = 200;
+
+function arenaSweep() {
+  outer: for (let y = arena.length - 1; y > 0; --y) {
+    for (let x = 0; x < arena[y].length; ++x) {
+      if (arena[y][x] === 0) {
+        continue outer;
+      }
+    }
+    const removedRow = arena.splice(y, 1);
+    const newRow = removedRow.fill(0);
+    arena.unshift(newRow);
+    ++y;
+  }
+}
 
 function playerReset() {
   const pieces = "TJLOSZI";
@@ -18,11 +26,9 @@ function playerReset() {
   );
   player.pos.y = 0;
   player.pos.x = 0;
-  // if (collide(arena, player)) {
-  //   arena.forEach(row => row.fill(0));
-  //   player.score = 0;
-  //   updateScore();
-  // }
+  if (collide(arena, player)) {
+    arena.forEach(row => row.fill(0));
+  }
 }
 
 function createPiece(type) {
@@ -72,7 +78,7 @@ function createPiece(type) {
 }
 
 function createMatrix(w, h) {
-  return [...Array(w).keys()].map(() => new Array(h).fill(0));
+  return [...Array(h).keys()].map(() => new Array(w).fill(0));
 }
 
 function merge(arena, player) {
@@ -133,7 +139,7 @@ function playerDrop() {
     player.pos.y -= sideLength;
     merge(arena, player);
     playerReset();
-    // arenaSweep();
+    arenaSweep();
     // updateScore();
   }
   dropCounter = 0;
@@ -158,7 +164,7 @@ function keyTyped() {
 }
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(canvasWidth, canvasHeight);
 }
 
 function draw() {
@@ -171,3 +177,7 @@ function draw() {
   drawMatrix(arena, { x: 0, y: 0 });
   drawMatrix(player.matrix, player.pos);
 }
+
+let player = { pos: { x: 0, y: 0 }, matrix: null };
+const arena = createMatrix(canvasWidth / sideLength, canvasHeight / sideLength);
+playerReset();
