@@ -103,11 +103,11 @@ function setup() {
 
 function draw() {
   background(0);
-  // dropTimer += deltaTime;
-  // if (dropTimer > dropInterval) {
-  //   player.pos.y += sideLength;
-  //   dropTimer = 0;
-  // }
+  dropTimer += deltaTime;
+  if (dropTimer > dropInterval) {
+    playerDrop();
+    dropTimer = 0;
+  }
   drawMatrix(arena, { x: 0, y: 0 });
   drawMatrix(player.matrix, player.pos);
 }
