@@ -8,7 +8,12 @@ const sideLength = 20;
 const dropInterval = 1000;
 
 let dropTimer = 0;
-let player = { pos: { x: 5, y: 5 }, matrix };
+let player = { pos: { x: 0, y: 0 }, matrix };
+const arena = createMatrix(20, 20);
+
+function createMatrix(w, h) {
+  return Array(h).fill(Array(w).fill(0));
+}
 
 function drawMatrix(matrix, offset) {
   matrix.forEach((row, rowIdx) => {
