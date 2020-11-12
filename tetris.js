@@ -12,7 +12,36 @@ let player = { pos: { x: 0, y: 0 }, matrix };
 const arena = createMatrix(20, 20);
 
 function createMatrix(w, h) {
-  return Array(h).fill(Array(w).fill(0));
+  return [...Array(w).keys()].map(() => new Array(h).fill(0));
+}
+
+function merge(arena, player) {
+  player.matrix.forEach((row, y) => {
+    row.forEach((value, x) => {
+      if (value !== 0) {
+        arena[y + player.pos.y / sideLength][
+          x + player.pos.x / sideLength
+        ] = value;
+      }
+    });
+  });
+}
+
+function collide(arena, player) {
+  const m = player.matrix;
+  const p = player.pos;
+  for (let y = 0; y < m.length; ++y) {
+    for (let x = 0; x < m[y].length; ++x) {
+      if (
+        m[y][x] !== 0 &&
+        (arena[y + p.y / sideLength] &&
+          arena[y + p.y / sideLength][x + p.x / sideLength]) !== 0
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 function drawMatrix(matrix, offset) {
@@ -23,8 +52,8 @@ function drawMatrix(matrix, offset) {
         rect(
           colIdx * sideLength + offset.x,
           rowIdx * sideLength + offset.y,
-          20,
-          20
+          sideLength,
+          sideLength
         );
       }
     });
@@ -33,21 +62,21 @@ function drawMatrix(matrix, offset) {
 
 function playerMove(offset) {
   player.pos.x += offset * sideLength;
-  // if (collide(arena, player)) {
-  //   player.pos.x -= offset;
-  // }
+  if (collide(arena, player)) {
+    player.pos.x -= offset * sideLength;
+  }
 }
 
 function playerDrop() {
   player.pos.y += sideLength;
-  // if (collide(arena, player)) {
-  //   player.pos.y--;
-  //   merge(arena, player);
-  //   playerReset();
-  //   arenaSweep();
-  //   updateScore();
-  // }
-  // dropCounter = 0;
+  if (collide(arena, player)) {
+    player.pos.y -= sideLength;
+    merge(arena, player);
+    // playerReset();
+    // arenaSweep();
+    // updateScore();
+  }
+  dropCounter = 0;
 }
 
 function keyPressed() {
@@ -79,5 +108,6 @@ function draw() {
   //   player.pos.y += sideLength;
   //   dropTimer = 0;
   // }
-  drawMatrix(matrix, player.pos);
+  drawMatrix(arena, { x: 0, y: 0 });
+  drawMatrix(player.matrix, player.pos);
 }
