@@ -1,9 +1,23 @@
 const sideLength = 20;
-// one second
 const dropInterval = 1000;
 let dropTimer = 0;
 let canvasWidth = 200;
 let canvasHeight = 200;
+
+function setup() {
+  createCanvas(canvasWidth, canvasHeight);
+}
+
+function draw() {
+  background(0);
+  dropTimer += deltaTime;
+  if (dropTimer > dropInterval) {
+    playerDrop();
+    dropTimer = 0;
+  }
+  drawMatrix(arena, { x: 0, y: 0 });
+  drawMatrix(player.matrix, player.pos);
+}
 
 function arenaSweep() {
   outer: for (let y = arena.length - 1; y > 0; --y) {
@@ -140,7 +154,6 @@ function playerDrop() {
     merge(arena, player);
     playerReset();
     arenaSweep();
-    // updateScore();
   }
   dropCounter = 0;
 }
@@ -161,21 +174,6 @@ function keyTyped() {
   } else if (key === "w") {
     console.log("rotate clockwise");
   }
-}
-
-function setup() {
-  createCanvas(canvasWidth, canvasHeight);
-}
-
-function draw() {
-  background(0);
-  dropTimer += deltaTime;
-  if (dropTimer > dropInterval) {
-    playerDrop();
-    dropTimer = 0;
-  }
-  drawMatrix(arena, { x: 0, y: 0 });
-  drawMatrix(player.matrix, player.pos);
 }
 
 let player = { pos: { x: 0, y: 0 }, matrix: null };
