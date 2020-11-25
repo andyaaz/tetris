@@ -155,7 +155,6 @@ function playerDrop() {
     playerReset();
     arenaSweep();
   }
-  dropCounter = 0;
 }
 
 function keyPressed() {
